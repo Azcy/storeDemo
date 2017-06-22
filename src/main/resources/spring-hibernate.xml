@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--定义数据源Bean，使用pringframework.jdbc.datasource.DriverManagerDataSource，并注入数据源的必要信息-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/store?useSSl=false"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <!--定义 Hibernate sessionFactory的属性-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <!--配置数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <!--设置mysql方言-->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <!--是否根据Hibernate映射创建数据表-->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!--显示sql操作语句-->
+                <prop key="hibernate.format_sql">true</prop>
+                <!--sql语句格式化-->
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+        <!--annotatedClasses 用来列出全部持久化类 -->
+        <property name="annotatedClasses">
+            <list>
+                <value>com.zcy.storeDemo.beans.ShopCart</value>
+                <!--列出PO类-->
+                <value>com.zcy.storeDemo.beans.User</value>
+
+                <value>com.zcy.storeDemo.beans.Goods</value>
+
+
+
+            </list>
+        </property>
+        <!--<property name="configLocations">-->
+            <!--<list>-->
+                <!--<value>classpath:hibernate.cfg.xml</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    </bean>
+    <!-- 配置事务管理（声明式事务） -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- 事务代理工厂类 -->
+    <bean id="transactionBase"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true" abstract="true">
+        <!-- 映射到事务管理的配置 -->
+        <property name="transactionManager" ref="transactionManager"/>
+        <!-- 配置事务管理的属性 -->
+        <property name="transactionAttributes">
+            <props>
+                <!-- 配置事务的传播特性 -->
+                <prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+                <prop key="query*">PROPAGATION_NEVER</prop>
+                <prop key="get*">PROPAGATION_NEVER</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--<bean id="user" class="com.zcy.test4.beans.User"/>-->
+    <!--登陆的action-->
+    <bean id="loginAction" class="com.zcy.storeDemo.web.action.LoginAction">
+        <property name="userService" ref="userService"/>
+        <!--<property name="user" ref="user"/>-->
+    </bean>
+    <!--goodsAction-->
+    <bean id="goodsAction" class="com.zcy.storeDemo.web.action.GoodsAction">
+        <property name="goodsService" ref="goodsService"/>
+    </bean>
+
+    <!--registAction-->
+    <bean id="registAction" class="com.zcy.storeDemo.web.action.RegistAction">
+        <property name="userService" ref="userService"/>
+    </bean>
+
+    <!--shopCartAction-->
+    <bean id="shopCartAction"  class="com.zcy.storeDemo.web.action.ShopCartAction">
+        <property name="shopCartService" ref="shopCartService"/>
+    </bean>
+
+    <!--user-->
+    <bean id="userDao" class="com.zcy.storeDemo.model.dao.impl.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="userServiceBase" class="com.zcy.storeDemo.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+    <bean id="userService" parent="transactionBase">
+        <property name="target" ref="userServiceBase"/>
+    </bean>
+
+    <!--注入goodsDao-->
+    <bean id="goodsDao" class="com.zcy.storeDemo.model.dao.impl.GoodsDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!--注入goodsServiceImpl-->
+    <bean id="goodsServiceBace" class="com.zcy.storeDemo.service.impl.GoodsServiceImpl">
+        <property name="dao" ref="goodsDao"/>
+    </bean>
+
+    <bean id="goodsService" parent="transactionBase">
+        <property name="target" ref="goodsServiceBace"/>
+    </bean>
+
+
+    <!--shopCart-->
+    <bean id="shopCartDao" class="com.zcy.storeDemo.model.dao.impl.ShopCartDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="shopCartServiceBace" class="com.zcy.storeDemo.service.impl.ShopChartServiceImpl">
+        <property name="dao" ref="shopCartDao"/>
+    </bean>
+    <bean id="shopCartService" parent="transactionBase">
+        <property name="target" ref="shopCartServiceBace"/>
+    </bean>
+
+</beans>

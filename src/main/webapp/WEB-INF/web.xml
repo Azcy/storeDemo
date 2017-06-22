@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <!-- 指定spring的配置文件 -->
+  <context-param>
+    <!--参数名为contextConfigLocation-->
+    <param-name>contextConfigLocation</param-name>
+    <!--多个配置文件之间以"，"隔开-->
+    <param-value>classpath:spring-*.xml</param-value>
+  </context-param>
+
+  <!--使用ContextLoaderListener初始化Spring容器-->
+  <listener>
+    <!--该监听器类实现了ContextLoaderListener接口，它会在创建时自动查找在WEB-INF下的applicationContext.xml-->
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!--struts2的拦截器-->
+  <filter>
+    <filter-name>struts2</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>struts2</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+</web-app>
